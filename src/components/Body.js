@@ -12,18 +12,29 @@ const Body = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(
-      "https://proxy.corsfix.com/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
-    );
-    const json = await data.json();
-    console.log(json);
-
-    const restaurants =
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants || [];
-    const restaurantData = restaurants.map((restaurant) => restaurant.info);
-    setAllRestaurants(restaurantData);
-    setFilteredRestaurants(restaurantData);
+    try {
+      const data = await fetch(
+        "https://proxy.corsfix.com/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
+      );
+      const json = await data.json();
+      const cards = json?.data?.cards || [];
+      const restaurantsCard = cards.find(
+        (c) =>
+          c?.card?.card?.gridElements?.infoWithStyle?.restaurants &&
+          Array.isArray(
+            c.card.card.gridElements.infoWithStyle.restaurants
+          )
+      );
+      const restaurants =
+        restaurantsCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+      const restaurantData = restaurants.map((r) => r?.info || r).filter(Boolean);
+      setAllRestaurants(restaurantData);
+      setFilteredRestaurants(restaurantData);
+    } catch (err) {
+      console.error("Failed to fetch restaurants:", err);
+      setAllRestaurants([]);
+      setFilteredRestaurants([]);
+    }
   };
 
   return allRestaurants.length === 0 ? (
@@ -50,7 +61,7 @@ const Body = () => {
                   return;
                 }
                 const results = allRestaurants.filter((res) =>
-                  res.name.toLowerCase().includes(query)
+                  (res?.name || "").toLowerCase().includes(query)
                 );
                 setFilteredRestaurants(results);
               }}
@@ -62,7 +73,7 @@ const Body = () => {
           className="filter-btn"
           onClick={() => {
             const filteredList = allRestaurants.filter(
-              (res) => res.avgRating >= 4.3
+              (Number(res?.avgRating) || 0) >= 4.3
             );
             setFilteredRestaurants(filteredList);
           }}
@@ -72,7 +83,7 @@ const Body = () => {
       </div>
       <div className="res-container">
         {filteredRestaurants.map((res) => (
-          <RestaurantCard key={res.id} res={res} />
+          <RestaurantCard key={res.id || res.uuid || Math.random()} res={res} />
         ))}
       </div>
     </div>
