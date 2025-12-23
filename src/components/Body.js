@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
+import { MOCK_RESTAURANTS } from "../utils/mockData";
 
 const Body = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
@@ -12,29 +13,11 @@ const Body = () => {
   }, []);
 
   const fetchData = async () => {
-    try {
-      const data = await fetch(
-        "https://proxy.corsfix.com/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
-      );
-      const json = await data.json();
-      const cards = json?.data?.cards || [];
-      const restaurantsCard = cards.find(
-        (c) =>
-          c?.card?.card?.gridElements?.infoWithStyle?.restaurants &&
-          Array.isArray(
-            c.card.card.gridElements.infoWithStyle.restaurants
-          )
-      );
-      const restaurants =
-        restaurantsCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-      const restaurantData = restaurants.map((r) => r?.info || r).filter(Boolean);
-      setAllRestaurants(restaurantData);
-      setFilteredRestaurants(restaurantData);
-    } catch (err) {
-      console.error("Failed to fetch restaurants:", err);
-      setAllRestaurants([]);
-      setFilteredRestaurants([]);
-    }
+    // Simulating API call delay with mock data
+    setTimeout(() => {
+      setAllRestaurants(MOCK_RESTAURANTS);
+      setFilteredRestaurants(MOCK_RESTAURANTS);
+    }, 500);
   };
 
   return allRestaurants.length === 0 ? (
