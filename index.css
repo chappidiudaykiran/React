@@ -128,3 +128,10 @@
     display: flex;
     align-items: center;
 }
+.user-card{
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    margin-top: 20px;
+}
