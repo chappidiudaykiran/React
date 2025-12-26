@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import { MOCK_RESTAURANTS } from "../utils/mockData";
+import useOnlineStatus from "../utils/useOnlineStatus";
+
 
 const Body = () => {
   const [allRestaurants, setAllRestaurants] = useState([]);
@@ -20,6 +22,16 @@ const Body = () => {
     }, 500);
   };
 
+
+  const onlineStatus = useOnlineStatus();
+
+  if (onlineStatus === false) {
+    return (
+      <h1 style={{ color: "red", textAlign: "center", marginTop: "50px" }}>
+          You are offline! Please check your internet connection.
+      </h1>
+    );
+  }
   return allRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
