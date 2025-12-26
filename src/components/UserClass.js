@@ -25,10 +25,10 @@ class UserClass extends React.Component{
     render(){
         const {name, location, avatar_url} = this.state.userInfo;
         return(
-            <div className="user-card">
-                <img src={avatar_url} alt="User Avatar" style={{width:"150px", height:"150px", borderRadius:"75px"}}/>
-                <h2>Name:{name}</h2>
-                <h3>Location:{location}</h3>
+            <div className="flex flex-col items-center bg-white border border-gray-200 p-8">
+                <img src={avatar_url} alt="User Avatar" className="w-28 h-28 rounded-full mb-4"/>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">{name}</h2>
+                <p className="text-sm text-gray-600">{location}</p>
             </div>
         )
     }   

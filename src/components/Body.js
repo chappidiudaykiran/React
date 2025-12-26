@@ -27,28 +27,33 @@ const Body = () => {
 
   if (onlineStatus === false) {
     return (
-      <h1 style={{ color: "red", textAlign: "center", marginTop: "50px" }}>
-          You are offline! Please check your internet connection.
-      </h1>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center p-10 bg-white shadow-md max-w-md">
+          <div className="text-6xl mb-4">📡</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-3">No Internet Connection</h1>
+          <p className="text-gray-600">Please check your connection and try again.</p>
+        </div>
+      </div>
     );
   }
   return allRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
-    <div className="body">
-      <div className="filter">
-        <div className="search">
+    <div className="min-h-screen bg-gray-50 px-6 py-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
+          <div className="flex gap-3 flex-1 min-w-[300px]">
             <input 
               type="text" 
-              placeholder="Search restaurants" 
-              className="search-box" 
+              placeholder="Search for restaurants and food" 
+              className="flex-1 px-5 py-3 border border-gray-300 focus:outline-none focus:border-[#fc8019] transition-colors text-gray-700" 
               value={searchText} 
               onChange={(e) => {
                 setSearchText(e.target.value);
               }}
             />
             <button 
-              className="search-btn" 
+              className="px-8 py-3 bg-[#fc8019] text-white font-semibold hover:bg-[#e87316] transition-colors" 
               onClick={() => {
                 const query = searchText.trim().toLowerCase();
                 if (!query) {
@@ -63,23 +68,24 @@ const Body = () => {
             >
               Search
             </button>
+          </div>
+          <button
+            className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-medium hover:border-[#fc8019] hover:text-[#fc8019] transition-colors"
+            onClick={() => {
+              const filteredList = allRestaurants.filter(
+                (res) => (Number(res?.avgRating) || 0) >= 4.3
+              );
+              setFilteredRestaurants(filteredList);
+            }}
+          >
+            Top Rated
+          </button>
         </div>
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredList = allRestaurants.filter(
-              (res) => (Number(res?.avgRating) || 0) >= 4.3
-            );
-            setFilteredRestaurants(filteredList);
-          }}
-        >
-          Top Rated Restaurants
-        </button>
-      </div>
-      <div className="res-container">
-        {filteredRestaurants.map((res) => (
-          <RestaurantCard key={res.id || res.uuid || Math.random()} res={res} />
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredRestaurants.map((res) => (
+            <RestaurantCard key={res.id || res.uuid || Math.random()} res={res} />
+          ))}
+        </div>
       </div>
     </div>
   );
