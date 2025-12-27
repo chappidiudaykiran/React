@@ -1,8 +1,11 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
     const { id } = useParams();
+    const [expandedIndex, setExpandedIndex] = useState(null);
     const menuData = useRestaurantMenu(id);
 
     if (!menuData) {
@@ -33,30 +36,16 @@ const RestaurantMenu = () => {
                     <p className="text-sm text-gray-500">{menuData.restaurant?.location}</p>
                 </div>
 
-                {/* Menu Categories */}
+                {/* Menu Categories (Accordion) */}
                 {menuData.menu?.map((category, index) => (
-                    <div key={index} className="bg-white shadow-sm p-6 mb-4">
-                        <h3 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b">{category.category}</h3>
-                        <div className="space-y-6">
-                            {category.items?.map((item) => (
-                                <div key={item.id} className="flex justify-between items-start pb-6 border-b last:border-0 last:pb-0">
-                                    <div className="flex-1">
-                                        <div className="flex items-start gap-2 mb-2">
-                                            <span className="text-xs mt-1" style={{color: item.isVeg ? '#0f8a65' : '#e43b4f'}}>
-                                                {item.isVeg ? "🟢" : "🔴"}
-                                            </span>
-                                            <div>
-                                                <h4 className="font-medium text-gray-800 text-base">{item.name}</h4>
-                                                <p className="text-sm text-gray-600 mt-1">{item.description}</p>
-                                                <p className="text-sm font-semibold text-gray-800 mt-2">₹{item.price}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button className="ml-4 px-8 py-2 border border-gray-300 text-[#fc8019] font-semibold hover:bg-gray-50 transition-colors text-sm uppercase">Add</button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                  <RestaurantCategory
+                    key={index}
+                    category={category}
+                    isOpen={expandedIndex === index}
+                    onToggle={() =>
+                      setExpandedIndex(expandedIndex === index ? null : index)
+                    }
+                  />
                 ))}
             </div>
         </div>

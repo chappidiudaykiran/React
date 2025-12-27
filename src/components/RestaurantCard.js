@@ -13,6 +13,13 @@ const RestaurantCard = ({ res }) => {
         <Link to={`/restaurants/${res.id}`} className="block group">
             <div className="bg-white hover:shadow-lg transition-shadow duration-200">
                 <div className="relative h-44 overflow-hidden">
+                    {res?.promoted && (
+                        <div className="absolute top-0 left-0 z-20 pointer-events-none">
+                            <div className="bg-gray-200 text-gray-700 uppercase tracking-wide text-[11px] font-semibold px-3 py-1.5 rounded-br-md shadow-sm border border-gray-300">
+                                Promoted
+                            </div>
+                        </div>
+                    )}
                     <img 
                         className="w-full h-full object-cover" 
                         src={imageUrl} 
